@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block contents %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<div class='contents-wrap'>
+    <h2 class="menu-name">변동성 돌파 차트</h2>
+    <div class="coin-chart">
+        <form action="" method="GET">
+            <select name="isReverse">
+                {% if isReverse == True %}
+                    <option value="True" selected>상위</option>
+                {% else %}
+                    <option value="True">상위</option>
+                {% endif %}
+                {% if isReverse == False %}
+                    <option value="" selected>하위</option>
+                {% else %}
+                    <option value="">하위</option>
+                {% endif %}
+            </select>
+            <select name="itemCount">
+                {% if itemCount == 5 %}
+                    <option value="5" selected>5개</option>
+                {% else %}
+                    <option value="5">5개</option>
+                {% endif %}
+                {% if itemCount == 10 %}
+                    <option value="10" selected>10개</option>
+                {% else %}
+                    <option value="10">10개</option>
+                {% endif %}
+                {% if itemCount == 15 %}
+                    <option value="15" selected>15개</option>
+                {% else %}
+                    <option value="15">15개</option>
+                {% endif %}
+            </select>
+            <div class="date-search">
+                <input type="date" name="startDate" id ="startDate" value="{{startDate}}" onchange="chageEndDate(this)"> ~
+                <input type="date" name="endDate" id="endDate" value="{{endDate}}" onchange="chageStartDate(this)">
+            </div>
+            <button type="submit">검색</button>
+        </form>
+        <canvas id="strategyChart" style="margin-top: 3%;"></canvas>
+    </div>
+</div>
+<script>
+    window.onload = function(){
+        const endDate = document.getElementById('endDate');
+        const startDate = document.getElementById('startDate');
+        const offset = new Date().getTimezoneOffset() * 60000;
+
+        startDate.max = new Date(Date.now() - offset).toISOString().substring(0, 10);
+        endDate.max = startDate.max
+
+        if(document.getElementById('startDate').value){
+            chageEndDate()
+        }
+        if(document.getElementById('endDate').value){
+            chageStartDate()
+        }
+    }
+
+    function chageEndDate(){
+        endDate.min = document.getElementById('startDate').value;
+    }
+    function chageStartDate(){
+        startDate.max = document.getElementById('endDate').value;
+    }
+
+    var randomColorPlugin = {
+        // We affect the `beforeUpdate` event
+        beforeUpdate: function(chart) {
+            var backgroundColor = [];
+            var borderColor = [];
+            // For every data we have ...
+            for (var i = 0; i < chart.config.data.datasets[0].data.length; i++) {
+
+                // We generate a random color
+                var color = "rgba(" + Math.floor(Math.random() * 255) + "," + Math.floor(Math.random() * 255) + "," + Math.floor(Math.random() * 255) + ",";
+
+                // We push this new color to both background and border color arrays
+                // .. a lighter color is used for the background
+                backgroundColor.push(color + "0.2)");
+                borderColor.push(color + "1)");
+            }
+
+            // We update the chart bars color properties
+            chart.config.data.datasets[0].backgroundColor = backgroundColor;
+            chart.config.data.datasets[0].borderColor = borderColor;
+        }
+    };
+
+    Chart.pluginService.register(randomColorPlugin);
+
+    var config = {
+    type: 'bar',
+    data: {
+        labels: {{labels|safe}},
+        datasets: [{
+            data: {{data|safe}},
+            backgroundColor: [
+                
+            ],
+            borderColor: [
+            
+            ],
+            borderWidth: 1,
+            label: "변동성 돌파 count 차트"
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+    };
+    
+    var ctx = document.getElementById('strategyChart').getContext('2d');
+    window.chart = new Chart(ctx, config);
+</script>
+{% endblock %}

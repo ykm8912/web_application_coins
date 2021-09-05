@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block contents %}
+<div class="contents-wrap">
+  <div class="top-container">
+    <h1>펌핑 & 변동성 돌파 & 골든/데드 크로스 탐지</h1>
+  </div>
+
+  <div class="coins">
+    <div class="latest-coin">
+      <h3>최근 펌핑코인 10개</h3>
+      <table class="latest-coin-list">
+        {% for pumping in pumpingList %}
+        <tr>
+          <td>{{pumping.coinCode}}</td>
+          <td>{{pumping.koreaName}}</td>
+          <td>{{pumping.tradePrice | floatformat}}₩</td>
+          <td>{{pumping.oneDayRate | floatformat:-2}}%</td>
+          <td>{{pumping.createdTime | date:'y-m-d H:i:s'}}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+
+    <div class="latest-coin">
+      <h3>최근 변동성 돌파 코인 10개</h3>
+      <table class="latest-coin-list">
+        {% for vol in volList %}
+        <tr>
+          <td>{{vol.coinCode}}</td>
+          <td>{{vol.koreaName}}</td>
+          <td>{{vol.tradePrice | floatformat}}₩</td>
+          <td>{{vol.oneDayRate | floatformat:-2}}%</td>
+          <td>{{vol.createdTime | date:'y-m-d H:i:s'}}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+
+    <div class="latest-coin">
+      <h3>최근 크로스코인 10개</h3>
+      <table class="latest-coin-list">
+        {% for cross in crossList %}
+        <tr>
+          <td>{{cross.coinCode}}</td>
+          <td>{{cross.koreaName}}</td>
+          <td>{{cross.tradePrice | floatformat}}₩</td>
+          <td>{{cross.oneDayRate | floatformat:-2}}%</td>
+          <td>{{cross.createdTime | date:'y-m-d H:i:s'}}</th>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+
+  </div>
+
+  <hr>
+
+  <div class="contact-me">
+    <h2>If you have any questions with my projects <br> Feel free to contact me</h2>
+    <h4>ykmin89@gmail.com</h4>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+
+<html lang='en'>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+        <!-- google font -->
+        <link href="https://fonts.googleapis.com/css2?family=Merriweather+Sans&family=Open+Sans&family=Roboto&display=swap" rel="stylesheet">
+        <!-- CSS style sheet -->
+        <link rel="stylesheet" href="{% static 'CSS/styles.css' %}">
+        <!-- icon -->
+        <script src="https://kit.fontawesome.com/fb7d45ce70.js" crossorigin="anonymous"></script>
+        <title>YKM's Clog</title>
+    </head>
+    <body>
+        <!-- Bootstrap Bundle with Popper -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+        
+        <!--Nav Bar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/crypto/">YKM's Clog</a>
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <ul class="navbar-nav ms-auto">
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Menu
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a class="dropdown-item" href="pumping?page=1">펌핑 리스트</a></li>
+                            <li><a class="dropdown-item" href="pumpingChart">펌핑 차트</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="strategy?page=1">변동성 돌파</a></li>
+                            <li><a class="dropdown-item" href="strategyChart">변동성 돌파 차트</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="cross?page=1">골든/데드 크로스</a></li>
+                            <li><a class="dropdown-item" href="crossChart">골든/데드 크로스 차트</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            language
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a class="dropdown-item" href="">english</a></li>
+                            <li><a class="dropdown-item" href="">korean</a></li>
+                        </ul>
+                    </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        {% block contents %}
+
+        {% endblock %}
+        <div class="bottom-container">
+            <a class="footer-link" href="https://github.com/ykm8912" target='_blank'><i class="fab fa-github"></i> Github</a>
+            <a class="footer-link" href=""><i class="fas fa-file"></i> Résumé</a>
+            <p class ="footer">© 2021 Yu Kyeoung-Min</p>
+        </div>
+    </body>
+</html>

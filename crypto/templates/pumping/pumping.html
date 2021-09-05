@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block contents %}
+<div class="contents-wrap">
+    <h2 class="menu-name">펑핌 리스트</h2>
+    <form class="search-form" action="" method="GET">
+        <div class="saerch">
+            <input type="text" name="keyword" value="{{keyword}}" placeholder="키워드 입력">
+            <select name="type">
+                <option value="">전체</option>
+                {% if type == 'new pumping' %}
+                    <option value="new pumping" selected>new pumping</option>
+                {% else %}
+                    <option value="new pumping">new pumping</option>
+                {% endif %}
+                {% if type == 'pumping'%}
+                    <option value="pumping" selected>pumping</option>
+                {% else %}
+                    <option value="pumping">pumping</option>
+                {% endif %}
+            </select>
+        </div>
+        <div class="date-search">
+            <input type="date" name="startDate" id="startDate" value="{{startDate}}" onchange="chageEndDate(this);"> ~
+            <input type="date" name="endDate" id="endDate" value="{{endDate}}" onchange="chageStartDate(this);">
+        </div>
+        <div class="button">
+            <button type="submit">검색</button>
+        </div>
+    </form>
+    <script>
+        const endDate = document.getElementById('endDate');
+        const startDate = document.getElementById('startDate');
+        const offset = new Date().getTimezoneOffset() * 60000;
+
+        startDate.max = new Date(Date.now() - offset).toISOString().substring(0, 10);
+        endDate.max = startDate.max
+
+        window.onload = function(){
+            if(document.getElementById('startDate').value){
+                chageEndDate()
+            }
+            if(document.getElementById('endDate').value){
+                chageStartDate()
+            }
+        }
+
+        function chageEndDate(){
+            endDate.min = document.getElementById('startDate').value;
+        }
+        function chageStartDate(){
+            startDate.max = document.getElementById('endDate').value;
+        }
+    </script>
+    <table class="coin-list">
+        {% if pumpingList|length <= 0 %}
+            데이터가 없습니다.
+        {% endif%}
+        {% if pumpingList|length > 0 %}
+        <tr>
+            <td>코드명</td>
+            <td>영문명</td>
+            <td>한글명</td>
+            <td>가격</td>
+            <td>등락률</td>
+            <td>구분</td>
+            <td>일시</td>
+        </tr>
+            {% for pumping in pumpingList %}
+                <tr>
+                    <td>{{pumping.coinCode}}</td>
+                    <td>{{pumping.englishName}}</td>
+                    <td>{{pumping.koreaName}}</td>
+                    <td>{{pumping.tradePrice|floatformat}}₩</td>
+                    <td>{{pumping.oneDayRate|floatformat:-2}}%</td>
+                    <td>{{pumping.type}}</td>
+                    <td>{{pumping.createdTime|date:'y-m-d H:i:s'}}</td>
+                </tr>
+            {% endfor %}
+        {% endif%}
+    </table>
+
+    <h5>
+        {% if pageCount != 0 %}
+            {% if page != 1 %}
+                <a href='?page=1&keyword={{keyword}}&type={{type}}&startDate={{startDate}}&endDate={{endDate}}'>처음</a>
+            {% endif %}
+
+            {% if page != 1 %}
+                <a href='?page={{page|add:-1}}&keyword={{keyword}}&type={{type}}&startDate={{startDate}}&endDate={{endDate}}'>이전</a>
+            {% endif %}
+            
+            {% for index in pageRange %}
+                {% if index != 0 %}
+                    {% if index == page %}
+                        <a class="page-active" href = "?page={{index}}&keyword={{keyword}}&type={{type}}&startDate={{startDate}}&endDate={{endDate}}">{{index}}</a>
+                    {% else %}
+                        <a href = "?page={{index}}&keyword={{keyword}}&type={{type}}&startDate={{startDate}}&endDate={{endDate}}">{{index}}</a>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+
+            {% if page != pageCount %}
+                <a href='?page={{page|add:+1}}&keyword={{keyword}}&type={{type}}&startDate={{startDate}}&endDate={{endDate}}'>다음</a>
+                <a href='?page={{pageCount}}&keyword={{keyword}}&type={{type}}&startDate={{startDate}}&endDate={{endDate}}'>끝</a>
+            {% endif %}
+        {% endif %}
+    </h5>
+</div>
+{% endblock%}

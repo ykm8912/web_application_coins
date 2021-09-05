@@ -1,0 +1,176 @@
+/* Navigtion-Bar */
+
+.navbar-brand{
+  font-weight: bold;
+}
+
+a{
+  color:#000;
+  font-family: 'Montserrat', sans-serif;
+  margin: 10px 20px;
+  text-decoration: none;
+}
+
+td{
+  width: 10%;
+}
+
+a:hover{
+  color: #91D2E1;
+}
+
+html{
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  color:#40514E;
+  margin: 0;
+  text-align: center;
+  font-family: 'Merriweather',serif;
+}
+
+h1 {
+  color:#73BCD6;
+  font-size: 5.625rem;
+  font-family: 'Sacramento', cursive;
+  margin: 50px auto 150px auto;
+
+}
+
+h2 {
+  font-weight: normal;
+  color:#73BCD6;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 2.5rem;
+  padding-bottom: 10px;
+}
+
+h3 {
+  color:#73BCD6;
+  font-family: 'Montserrat', sans-serif;
+}
+
+hr{
+  border-color:#d3d3d3;
+  border-style:dotted none none;
+  border-width: 10px;
+  width:5%;
+  margin: 100px auto;
+  background-color: white;
+}
+
+p{
+  color:#4051;
+  line-height: 2;
+}
+
+.bottom-img {
+  position: absolute;
+  left: 250px;
+  bottom: 150px;
+}
+
+.top-img {
+  position: absolute;
+  right: 300px;
+  top: 40px;
+}
+
+.bottom-container{
+  background-color:#91D2E1;
+  padding:50px 0 1px;
+  width: 100%;
+  height: 155px;
+  position:relative;
+  bottom: 0;
+}
+
+.contact-me{
+  margin-top: 50px;
+}
+
+.contact-message{
+  width:40%;
+  margin: 40px auto 60px;
+}
+
+.data {
+  text-decoration: underline;
+}
+
+.footer{
+  color:#EAF6F6;
+  font-size: 0.75rem;
+  padding: 20px 5px;
+  margin-bottom: 0;
+}
+
+.top-container {
+  background-color: #D2E4E8;
+  position: relative;
+  padding-top: 120px;
+  padding-bottom: 300px;
+
+}
+
+.intro{
+  width: 30%;
+  margin: auto;
+}
+
+.middle-container {
+  margin: 100px 0;
+}
+
+.latest-coin{
+  width: 50%;
+  margin: 100px auto 150px auto;
+  text-align: left;
+}
+
+.latest-coin-list{
+  margin-left:auto; 
+  margin-right:auto; 
+}
+
+.contents-wrap{
+  position: relative;
+  min-height: 100%;
+}
+
+.coin-list{
+  margin-left:auto;
+  margin-right:auto;
+  margin-top: 3%;
+  margin-bottom: 3%;
+}
+
+.coin-chart{
+  width: 75%;
+  margin-left:auto; 
+  margin-right:auto; 
+  padding-top: 2%;
+  padding-bottom: 46%;
+}
+
+.search-form{
+  margin-top: 2%;
+}
+
+.cross-chart{
+  width: 75%; 
+  margin-left:auto; 
+  margin-right:auto;
+  padding-top: 2%;
+  padding-bottom: 11%;
+}
+
+.page-active{
+  color:#73BCD6;
+}
+
+.menu-name{
+  margin-top: 1%;
+}
