@@ -1,9 +1,11 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block contents %}
 <div class="contents-wrap">
   <div class="top-container">
     <h1>펌핑 & 변동성 돌파 & 골든/데드 크로스 탐지</h1>
+    <h3>데이터 수집에는 업비트 API를 사용했습니다.</h3>
   </div>
 
   <div class="coins">
@@ -55,7 +57,10 @@
   </div>
 
   <hr>
-
+  <div class="overview">
+    <h3>프로젝트 구성도</h3>
+    <img src="{% static 'images/overview.png' %}">
+  </div>
   <div class="contact-me">
     <h2>If you have any questions with my projects <br> Feel free to contact me</h2>
     <h4>ykmin89@gmail.com</h4>
