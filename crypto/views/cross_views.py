@@ -20,31 +20,38 @@ def cross(request):
                                             'type' : resultDict['type']})
 
 def makeGcCrossRemark(crossList):
-    gcList = list(filter(lambda x: x['type'] == 'goldencross', crossList))
+    # gcList = list(filter(lambda x: x['type'] == 'goldencross', crossList))
+    gcList = [cross for cross in crossList if cross['type'] == 'goldencross']
 
     pumpingList = findWithoutCondition('pumping')
 
-    gcCodeList = []
-    for gc in gcList:
-        for pumping in pumpingList:
-            if gc['coinCode'] == pumping['coinCode'] and gc['createdTime'] <= pumping['createdTime']:
-                gcCodeList.append(gc['crossCode'])
+    # gcCodeList = []
+    # for gc in gcList:
+    #     for pumping in pumpingList:
+    #         if gc['coinCode'] == pumping['coinCode'] and gc['createdTime'] <= pumping['createdTime']:
+    #             gcCodeList.append(gc['crossCode'])
+    gcCodeList = [gc['crossCode'] for gc in gcList for pumping in pumpingList if gc['coinCode'] == pumping['coinCode'] and gc['createdTime'] <= pumping['createdTime']]
 
     for gc in gcList:
         for gcCode in gcCodeList:
             if gc['crossCode'] == gcCode:
                 gc['remark'] = '골든크로스 후 펌핑'
+    
 
 def makeDcCrossRemark(crossList):
-    dcList = list(filter(lambda x: x['type'] == 'deadcross', crossList))
-    gcList = list(filter(lambda x: x['type'] == 'goldencross', findWithoutCondition('cross')))
+    # dcList = list(filter(lambda x: x['type'] == 'deadcross', crossList))
+    dcList = [cross for cross in crossList if cross['type'] == 'deadcross']
 
-    dcCodeList = []
-    for dc in dcList:
-        for gc in gcList:
-            if dc['coinCode'] == gc['coinCode'] and dc['createdTime'] <= gc['createdTime']:
-                dcCodeList.append(dc['crossCode'])
-    
+    # gcList = list(filter(lambda x: x['type'] == 'goldencross', findWithoutCondition('cross')))
+    gcList = [cross for cross in findWithoutCondition('cross') if cross['type'] == 'goldencross']
+
+    # dcCodeList = []
+    # for dc in dcList:
+    #     for gc in gcList:
+    #         if dc['coinCode'] == gc['coinCode'] and dc['createdTime'] <= gc['createdTime']:
+    #             dcCodeList.append(dc['crossCode'])
+    dcCodeList = [dc['crossCode'] for dc in dcList for gc in gcList if dc['coinCode'] == gc['coinCode'] and dc['createdTime'] <= gc['createdTime']]
+
     for dc in dcList:
         for dcCode in dcCodeList:
             if dc['crossCode'] == dcCode:
@@ -56,9 +63,10 @@ def crossChart(request):
     endDateReq = request.GET.get('endDate', '')
 
     if endDateReq:
-        endDate = []
-        endDate.append(endDateReq)
-        endDate.append("23:59:59")
+        # endDate = []
+        # endDate.append(endDateReq)
+        # endDate.append("23:59:59")
+        endDate = [endDateReq, "23:59:59"]
         endDate = ' '.join(endDate)
 
     qr = {}
@@ -91,16 +99,17 @@ def crossChart(request):
                                                     'endDate' : endDateReq})
     
 def makeGcList(isReverse, itemCount, qr):
-    coinCodeList = []
+    # coinCodeList = []
     coinCodeDict = {}
     dbm = MongoDbManager('cross')
     
-    ctype = "goldencross"
-    qr["type"] = ctype
+    # ctype = "goldencross"
+    qr["type"] = "goldencross"
     gcList = list(dbm.col.find(qr).sort('createdTime', -1))
      
-    for gc in gcList:
-        coinCodeList.append(gc['coinCode'])
+    # for gc in gcList:
+    #     coinCodeList.append(gc['coinCode'])
+    coinCodeList = [gc['coinCode'] for gc in gcList]
     
     coinCodeSet = set(coinCodeList)
     coinCodeSetList = list(coinCodeSet)
@@ -118,17 +127,18 @@ def makeGcList(isReverse, itemCount, qr):
     return gcLabels, gcDat
 
 def makeDcList(isReverse, itemCount, qr):
-    coinCodeList = []
+    # coinCodeList = []
     coinCodeDict = {}
     dbm = MongoDbManager('cross')
 
-    ctype = "deadcross"
-    qr["type"] = ctype
+    # ctype = "deadcross"
+    qr["type"] = "deadcross"
     dcList = list(dbm.col.find(qr).sort('createdTime', -1))
      
-    for dc in dcList:
-        coinCodeList.append(dc['coinCode'])
-    
+    # for dc in dcList:
+    #     coinCodeList.append(dc['coinCode'])
+    coinCodeList = [dc['coinCode'] for dc in dcList]
+
     coinCodeSet = set(coinCodeList)
     coinCodeSetList = list(coinCodeSet)
 

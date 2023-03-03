@@ -29,9 +29,10 @@ def handle(request, col):
     endDateReq= request.GET.get('endDate', '')
 
     if endDateReq:
-        endDate = []
-        endDate.append(endDateReq)
-        endDate.append("23:59:59")
+        # endDate = []
+        # endDate.append(endDateReq)
+        # endDate.append("23:59:59")
+        endDate = [endDateReq, "23:59:59"]
         endDate = ' '.join(endDate)
         
     if page <= 0:
@@ -89,9 +90,10 @@ def handleChart(request, col):
     endDateReq= request.GET.get('endDate', '')
 
     if endDateReq:
-        endDate = []
-        endDate.append(endDateReq)
-        endDate.append("23:59:59")
+        # endDate = []
+        # endDate.append(endDateReq)
+        # endDate.append("23:59:59")
+        endDate = [endDateReq, "23:59:59"]
         endDate = ' '.join(endDate)
 
     qr = {}
@@ -109,8 +111,12 @@ def handleChart(request, col):
 
     resultList = list(dbm.col.find(qr).sort('createdTime', -1))
      
-    for result in resultList:
-        coinCodeList.append(result['coinCode'])
+    # for result in resultList:
+    #     coinCodeList.append(result['coinCode'])
+
+    # coinCodeList = (result['coinCode'] for result in resultList)
+
+    coinCodeList = [result['coinCode'] for result in resultList]
     
     coinCodeSet = set(coinCodeList)
     coinCodeSetList = list(coinCodeSet)
