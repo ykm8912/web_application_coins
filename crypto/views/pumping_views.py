@@ -11,7 +11,7 @@ def pumping(request):
                                                 'keyword' : resultDict['keyword'],
                                                 'startDate' : resultDict['startDate'],
                                                 'endDate' : resultDict['endDate'],
-                                                'type': resultDict['type']})
+                                                })
 
 def pumpingChart(request):
     resultDict = handleChart(request, 'pumping')

@@ -2,24 +2,33 @@
 
 {% block contents %}
 <div class="contents-wrap">
-    <h2 class="menu-name">크로스 리스트</h2>
+    <h2 class="menu-name">골든크로스 리스트</h2>
     <h3 class="menu-describe">조건 : 업비트 차트의 최근 4시간 캔들 21개를 살펴봤을 때</h3>
     <h3 class="menu-describe">1. 데드크로스 : 현재가 < 20시간 평균가 AND 20시간 평균가 < 80시간 평균가 AND 4시간 전에는 20시간 평균가 > 80시간 평균가</h3>
     <h3 class="menu-describe">2. 골든크로스 : 현재가 > 20시간 평균가 AND 20시간 평균가 > 80시간 평균가 AND 4시간 전에는 20시간 평균가 < 80시간 평균가</h3>
     <form class="search-form" action="" method="GET" style="margin-top: 2%">
         <div class="saerch">
             <input type="text" name="keyword" value="{{keyword}}" placeholder="키워드 입력">
-            <select name="type">
-                <option value="">전체</option>
-                {% if type == 'goldencross' %}
-                    <option value="goldencross" selected>골든크로스</option>
+            <select name="col">
+                {% if col == 'day_yet_golden_cross' %}
+                    <option value="day_yet_golden_cross" selected>골든크로스</option>
                 {% else %}
-                    <option value="goldencross">골든크로스</option>
+                    <option value="day_yet_golden_cross">골든크로스</option>
                 {% endif %}
-                {% if type == 'deadcross'%}
-                    <option value="deadcross" selected>데드크로스</option>
+                {% if col == 'day_not_yet_golden_cross'%}
+                    <option value="day_not_yet_golden_cross" selected>데드크로스</option>
                 {% else %}
-                    <option value="deadcross">데드크로스</option>
+                    <option value="day_not_yet_golden_cross">데드크로스</option>
+                {% endif %}
+                {% if col == 'day_pumping_yet'%}
+                    <option value="day_pumping_yet" selected>골든크로스 후 펌핑 있음</option>
+                {% else %}
+                    <option value="day_pumping_yet">골든크로스 후 펌핑 있음</option>
+                {% endif %}
+                {% if col == 'day_pumping_not_yet'%}
+                    <option value="day_pumping_not_yet" selected>골든크로스 후 펌핑 없음</option>
+                {% else %}
+                    <option value="day_pumping_not_yet">골든크로스 후 펌핑 없음</option>
                 {% endif %}
             </select>
         </div>
@@ -65,22 +74,40 @@
             <td>코드명</td>
             <td>영문명</td>
             <td>한글명</td>
-            <td>가격</td>
-            <td>등락률</td>
-            <td>구분</td>
-            <td>비고</td>
-            <td>일시</td>
+            {% if col == 'day_yet_golden_cross' %}
+                <td>골든크로스 일시</td>
+            {% endif %}
+            {% if col == 'day_not_yet_golden_cross' %}
+                <td>데드크로스 일시</td>
+            {% endif %}
+            {% if col == 'day_pumping_not_yet' %}
+                <td>골든크로스 일시</td>
+                <td>마지막 펌핑 일시</td>
+            {% endif %}
+            {% if col == 'day_pumping_yet' %}
+                <td>골든크로스 일시</td>
+                <td>펌핑 일시</td>
+            {% endif %}
         </tr>
             {% for cross in crossList %}
                 <tr>
                     <td>{{cross.coinCode}}</td>
                     <td>{{cross.englishName}}</td>
                     <td>{{cross.koreaName}}</td>
-                    <td>{{cross.tradePrice|floatformat}}₩</td>
-                    <td>{{cross.oneDayRate|floatformat:-2}}%</td>
-                    <td>{{cross.type}}</td>
-                    <td>{{cross.remark}}</td>
-                    <td>{{cross.createdTime|date:'y-m-d H:i:s'}}</th>
+                    {% if col == 'day_yet_golden_cross' %}
+                        <td>{{cross.goldenCrossTime|date:'y-m-d H:i:s'}}</td>
+                    {% endif %}
+                    {% if col == 'day_not_yet_golden_cross' %}
+                        <td>{{cross.deadCrossTime|date:'y-m-d H:i:s'}}</td>
+                    {% endif %}
+                    {% if col == 'day_pumping_not_yet' %}
+                        <td>{{cross.goldenCrossTime|date:'y-m-d H:i:s'}}</td>
+                        <td>{{cross.lastPumpingTime|date:'y-m-d H:i:s'}}</td>
+                    {% endif %}
+                    {% if col == 'day_pumping_yet' %}
+                        <td>{{cross.goldenCrossTime|date:'y-m-d H:i:s'}}</td>
+                        <td>{{cross.pumpingTime|date:'y-m-d H:i:s'}}</td>
+                    {% endif %}
                 </tr>
             {% endfor %}
         {% endif%}
@@ -89,26 +116,26 @@
     <h5>
         {% if pageCount != 0 %}
             {% if page != 1 %}
-                <a href='?page=1&keyword={{keyword}}&type={{type}}&startDate={{startDate}}&endDate={{endDate}}'>처음</a>
+                <a href='?page=1&keyword={{keyword}}&col={{col}}&startDate={{startDate}}&endDate={{endDate}}'>처음</a>
             {% endif %}
 
             {% if page != 1 %}
-                <a href='?page={{page|add:-1}}&keyword={{keyword}}&type={{type}}&startDate={{startDate}}&endDate={{endDate}}'>이전</a>
+                <a href='?page={{page|add:-1}}&keyword={{keyword}}&col={{col}}&startDate={{startDate}}&endDate={{endDate}}'>이전</a>
             {% endif %}
             
             {% for index in pageRange %}
                 {% if index != 0 %}
                     {% if index == page %}
-                        <a class="page-active" href = "?page={{index}}&keyword={{keyword}}&type={{type}}&startDate={{startDate}}&endDate={{endDate}}">{{index}}</a>
+                        <a class="page-active" href = "?page={{index}}&keyword={{keyword}}&col={{col}}&startDate={{startDate}}&endDate={{endDate}}">{{index}}</a>
                     {% else %}
-                        <a href = "?page={{index}}&keyword={{keyword}}&type={{type}}&startDate={{startDate}}&endDate={{endDate}}">{{index}}</a>
+                        <a href = "?page={{index}}&keyword={{keyword}}&col={{col}}&startDate={{startDate}}&endDate={{endDate}}">{{index}}</a>
                     {% endif %}
                 {% endif %}
             {% endfor %}
 
             {% if page != pageCount %}
-                <a href='?page={{page|add:+1}}&keyword={{keyword}}&type={{type}}&startDate={{startDate}}&endDate={{endDate}}'>다음</a>
-                <a href='?page={{pageCount}}&keyword={{keyword}}&type={{type}}&startDate={{startDate}}&endDate={{endDate}}'>끝</a>
+                <a href='?page={{page|add:+1}}&keyword={{keyword}}&col={{col}}&startDate={{startDate}}&endDate={{endDate}}'>다음</a>
+                <a href='?page={{pageCount}}&keyword={{keyword}}&col={{col}}&startDate={{startDate}}&endDate={{endDate}}'>끝</a>
             {% endif %}
         {% endif %}
     </h5>

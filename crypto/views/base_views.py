@@ -18,20 +18,16 @@ def index(request):
                                             'crossList' : crossList,
                                             'volList' : volList})
 
-def handle(request, col):
+def handle(request=None, col=None):
     page = request.GET.get('page', 1)
     page = int(page or 1)
     pageSize = 30
     pageBarSize = 10
     keyword = request.GET.get('keyword', '')
-    type = request.GET.get('type', '')
     startDateReq = request.GET.get('startDate', '')
     endDateReq= request.GET.get('endDate', '')
 
     if endDateReq:
-        # endDate = []
-        # endDate.append(endDateReq)
-        # endDate.append("23:59:59")
         endDate = [endDateReq, "23:59:59"]
         endDate = ' '.join(endDate)
         
@@ -39,18 +35,24 @@ def handle(request, col):
         page = 1
     
     if col == 'pumping':
-        dbm = MongoDbManager('pumping')
+        dbm = MongoDbManager('day_pumping')
     elif col == 'strategy':
-        dbm = MongoDbManager('vol')
-    elif col == 'cross':
-        dbm = MongoDbManager('cross')
+        dbm = MongoDbManager('day_vol')
+    elif col == 'day_yet_golden_cross':
+        dbm = MongoDbManager('day_yet_golden_cross')
+    elif col == 'day_not_yet_golden_cross':
+        dbm = MongoDbManager('day_not_yet_golden_cross')
+    elif col == 'day_pumping_yet':
+        dbm = MongoDbManager('day_pumping_yet')
+    elif col == 'day_pumping_not_yet':
+        dbm = MongoDbManager('day_pumping_not_yet')
+    else:
+        raise Exception('col is not valid')
 
-    if keyword or type or (startDateReq and endDateReq):
-        qr = {}
+    if keyword or (startDateReq and endDateReq):
+        qr = dict()
         if keyword:
             qr = {"$or" : [{"coinCode" : {"$regex" : keyword}}, {"englishName" : {"$regex" : keyword}}, {"koreaName" : {"$regex" : keyword}}]}
-        if type:
-            qr["$and"] = [{"type" : type}]
         if startDateReq and endDateReq:
             startDate = datetime.strptime(startDateReq, '%Y-%m-%d')
             endDate = datetime.strptime(endDate, '%Y-%m-%d %H:%M:%S')
@@ -69,52 +71,54 @@ def handle(request, col):
     if endIndex >= pageCount:
         endIndex = pageCount
 
-    return {'resultList' : resultList,
+    return {
+            'resultList' : resultList,
             'page' : page,
             'pageCount' : pageCount,
             'pageRange' : range(startIndex, endIndex + 1),
             'keyword' : keyword,
             'startDate' : startDateReq,
             'endDate' : endDateReq,
-            'type': type}
+            'col' : col,
+            }
 
 
-def handleChart(request, col):
+def handleChart(request=None, col=None):
     isReverse = request.GET.get('isReverse', True)
     isReverse = bool(isReverse)
     itemCount = request.GET.get('itemCount', 5)
     itemCount = int(itemCount)
-    coinCodeList = []
-    coinCodeDict = {}
+    coinCodeList = list()
+    coinCodeDict = dict()
     startDateReq = request.GET.get('startDate', '')
     endDateReq= request.GET.get('endDate', '')
 
     if endDateReq:
-        # endDate = []
-        # endDate.append(endDateReq)
-        # endDate.append("23:59:59")
         endDate = [endDateReq, "23:59:59"]
         endDate = ' '.join(endDate)
 
-    qr = {}
+    qr = dict()
     if startDateReq and endDateReq:
         startDate = datetime.strptime(startDateReq, '%Y-%m-%d')
         endDate = datetime.strptime(endDate, '%Y-%m-%d %H:%M:%S')
         qr["createdTime"] = {"$gte" : startDate, "$lte" : endDate}
     
     if col == 'pumping':
-        dbm = MongoDbManager('pumping')
+        dbm = MongoDbManager('day_pumping')
     elif col == 'strategy':
-        dbm = MongoDbManager('vol')
-    elif col == 'cross':
-        dbm = MongoDbManager('cross')
+        dbm = MongoDbManager('day_vol')
+    elif col == 'day_yet_golden_cross':
+        dbm = MongoDbManager('day_yet_golden_cross')
+    elif col == 'day_not_yet_golden_cross':
+        dbm = MongoDbManager('day_not_yet_golden_cross')
+    elif col == 'day_pumping_yet':
+        dbm = MongoDbManager('day_pumping_yet')
+    elif col == 'day_pumping_not_yet':
+        dbm = MongoDbManager('day_pumping_not_yet')
+    else:
+        raise Exception('col is not valid')
 
     resultList = list(dbm.col.find(qr).sort('createdTime', -1))
-     
-    # for result in resultList:
-    #     coinCodeList.append(result['coinCode'])
-
-    # coinCodeList = (result['coinCode'] for result in resultList)
 
     coinCodeList = [result['coinCode'] for result in resultList]
     
@@ -131,15 +135,15 @@ def handleChart(request, col):
     labels = list(sortedcoinCodeDict.keys())
     dat = list(sortedcoinCodeDict.values())
 
-    resultDict = {}
-    resultDict['labels'] = labels
-    resultDict['data'] = dat
-    resultDict['isReverse'] = isReverse
-    resultDict['itemCount'] = itemCount
-    resultDict['startDate'] = startDateReq
-    resultDict['endDate'] = endDateReq
-    
-    return resultDict
+    return {
+            'labels' : labels,
+            'data' : dat,
+            'isReverse' : isReverse,
+            'itemCount' : itemCount,
+            'startDate' : startDateReq,
+            'endDate' : endDateReq,
+            'col' : col,
+            }
 
 def findWithoutCondition(col):
     if col == 'pumping':
