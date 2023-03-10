@@ -2,78 +2,68 @@
 
 {% block contents %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
-<div class="contents-wrap">
+<div class='contents-wrap'>
     <h2 class="menu-name">크로스 차트</h2>
-    <div class="cross-chart">
+    <div class="coin-chart">
         <form action="" method="GET">
-            골든크로스 :
-            <select name="isReverseGc">
-                {% if isReverseGc == True %}
+            <select name="isReverse">
+                {% if isReverse == True %}
                     <option value="True" selected>상위</option>
                 {% else %}
                     <option value="True">상위</option>
                 {% endif %}
-                {% if isReverseGc == False %}
+                {% if isReverse == False %}
                     <option value="" selected>하위</option>
                 {% else %}
                     <option value="">하위</option>
                 {% endif %}
             </select>
-            <select name="itemCountGc">
-                {% if itemCountGc == 5 %}
+            <select name="itemCount">
+                {% if itemCount == 5 %}
                     <option value="5" selected>5개</option>
                 {% else %}
                     <option value="5">5개</option>
                 {% endif %}
-                {% if itemCountGc == 10 %}
+                {% if itemCount == 10 %}
                     <option value="10" selected>10개</option>
                 {% else %}
                     <option value="10">10개</option>
                 {% endif %}
-                {% if itemCountGc == 15 %}
+                {% if itemCount == 15 %}
                     <option value="15" selected>15개</option>
                 {% else %}
                     <option value="15">15개</option>
                 {% endif %}
             </select>
-            데드크로스 :
-            <select name="isReverseDc">
-                {% if isReverseDc == True %}
-                    <option value="True" selected>상위</option>
+            <select name="col">
+                {% if col == 'day_yet_golden_cross' %}
+                    <option value="day_yet_golden_cross" selected>골든크로스</option>
                 {% else %}
-                    <option value="True">상위</option>
+                    <option value="day_yet_golden_cross">골든크로스</option>
                 {% endif %}
-                {% if isReverseDc == False %}
-                    <option value="" selected>하위</option>
+                {% if col == 'day_not_yet_golden_cross'%}
+                    <option value="day_not_yet_golden_cross" selected>데드크로스</option>
                 {% else %}
-                    <option value="">하위</option>
+                    <option value="day_not_yet_golden_cross">데드크로스</option>
                 {% endif %}
-            </select>
-            <select name="itemCountDc">
-                {% if itemCountDc == 5 %}
-                    <option value="5" selected>5개</option>
+                {% if col == 'day_pumping_yet'%}
+                    <option value="day_pumping_yet" selected>골든크로스 후 펌핑 있음</option>
                 {% else %}
-                    <option value="5">5개</option>
+                    <option value="day_pumping_yet">골든크로스 후 펌핑 있음</option>
                 {% endif %}
-                {% if itemCountDc == 10 %}
-                    <option value="10" selected>10개</option>
+                {% if col == 'day_pumping_not_yet'%}
+                    <option value="day_pumping_not_yet" selected>골든크로스 후 펌핑 없음</option>
                 {% else %}
-                    <option value="10">10개</option>
-                {% endif %}
-                {% if itemCountDc == 15 %}
-                    <option value="15" selected>15개</option>
-                {% else %}
-                    <option value="15">15개</option>
+                    <option value="day_pumping_not_yet">골든크로스 후 펌핑 없음</option>
                 {% endif %}
             </select>
             <div class="date-search">
-                <input type="date" name="startDate" id ="startDate" value="{{startDate}}" onchange="chageEndDate(this)"> ~
+                <input type="date" name="startDate" id="startDate" value="{{startDate}}" onchange="chageEndDate(this)"> ~
                 <input type="date" name="endDate" id="endDate" value="{{endDate}}" onchange="chageStartDate(this)">
             </div>
             <button type="submit">검색</button>
         </form>
-        <canvas id="gcCrossChart" style="margin-top: 3%; margin-bottom: 5%"></canvas>
-        <canvas id="dcCrossChart"></canvas>
+        <canvas id="crossChart"></canvas>
     </div>
 </div>
 <script>
@@ -81,10 +71,10 @@
         const endDate = document.getElementById('endDate');
         const startDate = document.getElementById('startDate');
         const offset = new Date().getTimezoneOffset() * 60000;
-    
+
         startDate.max = new Date(Date.now() - offset).toISOString().substring(0, 10);
         endDate.max = startDate.max
-        
+
         if(document.getElementById('startDate').value){
             chageEndDate()
         }
@@ -125,12 +115,12 @@
 
     Chart.pluginService.register(randomColorPlugin);
 
-    var gcConfig = {
+    var config = {
     type: 'bar',
     data: {
-        labels: {{gcLabels|safe}},
+        labels: {{labels|safe}},
         datasets: [{
-            data: {{gcData|safe}},
+            data: {{data|safe}},
             backgroundColor: [
                 
             ],
@@ -138,7 +128,7 @@
             
             ],
             borderWidth: 1,
-            label: "골든크로스 count 차트"
+            label: "크로스 count 차트"
         }]
     },
     options: {
@@ -151,38 +141,8 @@
         }
     }
     };
-
-    var dcConfig = {
-    type: 'bar',
-    data: {
-        labels: {{dcLabels|safe}},
-        datasets: [{
-            data: {{dcData|safe}},
-            backgroundColor: [
-                
-            ],
-            borderColor: [
-            
-            ],
-            borderWidth: 1,
-            label: "데드크로스 count 차트"
-        }]
-    },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
-                }
-            }]
-        }
-    }
-    };
-
-    var gcCtx = document.getElementById('gcCrossChart').getContext('2d');
-    var gcCrossChart = new Chart(gcCtx, gcConfig);
-
-    var dcCtx = document.getElementById('dcCrossChart').getContext('2d');
-    var dcCrossChart = new Chart(dcCtx, dcConfig);
+    
+    var ctx = document.getElementById('crossChart').getContext('2d');
+    window.chart = new Chart(ctx, config);
 </script>
 {% endblock %}

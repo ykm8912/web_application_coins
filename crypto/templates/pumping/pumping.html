@@ -9,19 +9,6 @@
     <form class="search-form" action="" method="GET">
         <div class="saerch">
             <input type="text" name="keyword" value="{{keyword}}" placeholder="키워드 입력">
-            <select name="type">
-                <option value="">전체</option>
-                {% if type == 'new pumping' %}
-                    <option value="new pumping" selected>new pumping</option>
-                {% else %}
-                    <option value="new pumping">new pumping</option>
-                {% endif %}
-                {% if type == 'pumping'%}
-                    <option value="pumping" selected>pumping</option>
-                {% else %}
-                    <option value="pumping">pumping</option>
-                {% endif %}
-            </select>
         </div>
         <div class="date-search">
             <input type="date" name="startDate" id="startDate" value="{{startDate}}" onchange="chageEndDate(this);"> ~
