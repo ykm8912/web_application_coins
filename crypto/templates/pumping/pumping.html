@@ -53,7 +53,6 @@
             <td>한글명</td>
             <td>가격</td>
             <td>등락률</td>
-            <td>구분</td>
             <td>일시</td>
         </tr>
             {% for pumping in pumpingList %}
@@ -63,7 +62,6 @@
                     <td>{{pumping.koreaName}}</td>
                     <td>{{pumping.tradePrice|floatformat}}₩</td>
                     <td>{{pumping.oneDayRate|floatformat:-2}}%</td>
-                    <td>{{pumping.type}}</td>
                     <td>{{pumping.createdTime|date:'y-m-d H:i:s'}}</td>
                 </tr>
             {% endfor %}

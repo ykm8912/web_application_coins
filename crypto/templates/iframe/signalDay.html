@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block contents %}
+<div class="contents-wrap">
+    <iframe src="http://0.0.0.0:8088/superset/dashboard/signalDay/?standalone=true"
+            id="iframe" 
+            frameborder="0" 
+            scrolling="no"
+            style="overflow-x:hidden; overflow:auto; width:100%; height:700px;"></iframe>
+</div>
+{% endblock %}

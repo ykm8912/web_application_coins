@@ -36,16 +36,22 @@ def handle(request=None, col=None):
     
     if col == 'pumping':
         dbm = MongoDbManager('day_pumping')
+        timeField = 'createdTime'
     elif col == 'strategy':
         dbm = MongoDbManager('day_vol')
+        timeField = 'createdTime'
     elif col == 'day_yet_golden_cross':
         dbm = MongoDbManager('day_yet_golden_cross')
+        timeField = 'goldenCrossTime'
     elif col == 'day_not_yet_golden_cross':
         dbm = MongoDbManager('day_not_yet_golden_cross')
+        timeField = 'deadCrossTime'
     elif col == 'day_pumping_yet':
         dbm = MongoDbManager('day_pumping_yet')
+        timeField = 'pumpingTime'
     elif col == 'day_pumping_not_yet':
         dbm = MongoDbManager('day_pumping_not_yet')
+        timeField = 'lastPumpingTime'
     else:
         raise Exception('col is not valid')
 
@@ -56,12 +62,12 @@ def handle(request=None, col=None):
         if startDateReq and endDateReq:
             startDate = datetime.strptime(startDateReq, '%Y-%m-%d')
             endDate = datetime.strptime(endDate, '%Y-%m-%d %H:%M:%S')
-            qr["createdTime"] = {"$gte" : startDate, "$lte" : endDate}
+            qr[timeField] = {"$gte" : startDate, "$lte" : endDate}
 
-        resultList = list(dbm.col.find(qr).sort('createdTime', -1).skip((page - 1) * pageSize).limit(pageSize))
+        resultList = list(dbm.col.find(qr).sort(timeField, -1).skip((page - 1) * pageSize).limit(pageSize))
         totalCount = dbm.col.find(qr).count()
     else:
-        resultList = list(dbm.col.find().sort('createdTime', -1).skip((page - 1) * pageSize).limit(pageSize))
+        resultList = list(dbm.col.find().sort(timeField, -1).skip((page - 1) * pageSize).limit(pageSize))
         totalCount = totalCount = dbm.col.find().count()
 
     pageCount = math.ceil(totalCount / pageSize)

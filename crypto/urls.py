@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import base_views, pumping_views, strategy_views, cross_views
+from .views import base_views, pumping_views, strategy_views, cross_views, iframe_views
 
 urlpatterns = [
     path('', base_views.index, name='index'),
@@ -9,4 +9,6 @@ urlpatterns = [
     path('strategyChart', strategy_views.strategyChart, name='strategyChart'),
     path('cross', cross_views.cross, name='cross'),
     path('crossChart', cross_views.crossChart, name='crossChart'),
+    path('signalDay', iframe_views.signalDay, name='signalDay'),
+    path('signalTime', iframe_views.signalTime, name='signalTime'),
 ]
