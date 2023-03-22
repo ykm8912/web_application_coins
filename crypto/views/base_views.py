@@ -65,10 +65,10 @@ def handle(request=None, col=None):
             qr[timeField] = {"$gte" : startDate, "$lte" : endDate}
 
         resultList = list(dbm.col.find(qr).sort(timeField, -1).skip((page - 1) * pageSize).limit(pageSize))
-        totalCount = dbm.col.find(qr).count()
+        totalCount = dbm.col.count_documents(qr)
     else:
         resultList = list(dbm.col.find().sort(timeField, -1).skip((page - 1) * pageSize).limit(pageSize))
-        totalCount = totalCount = dbm.col.find().count()
+        totalCount = dbm.col.count_documents({})
 
     pageCount = math.ceil(totalCount / pageSize)
     startIndex = int(page / pageBarSize) * pageBarSize
