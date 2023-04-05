@@ -7,5 +7,24 @@
             frameborder="0" 
             scrolling="no"
             style="overflow-x:hidden; overflow:auto; width:100%; height:700px;"></iframe>
+    
+    <input type="text" id="input" placeholder="초를 입력하세요.">
+    <button id="btn">시간 변환</button>
+    <input type="text" id="result" readonly>
 </div>
+<script>
+    var btn = document.getElementById('btn');
+    var input = document.getElementById('input');
+    var iframe = document.getElementById('iframe');
+    btn.addEventListener('click', function() {
+        var val = input.value;
+        var hour = Math.floor(val / 3600);
+        var fract = val % 3600;
+
+        var min = Math.floor(fract / 60);
+        var sec = fract % 60;
+
+        document.getElementById('result').value =  hour + '시간 ' + min + '분 ' + sec + '초';
+    });
+</script>
 {% endblock %}
