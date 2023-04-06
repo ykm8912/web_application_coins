@@ -94,8 +94,8 @@ def handleChart(request=None, col=None):
     isReverse = bool(isReverse)
     itemCount = request.GET.get('itemCount', 5)
     itemCount = int(itemCount)
-    coinCodeList = list()
-    coinCodeDict = dict()
+    koreaNameList = list()
+    koreaNameDict = dict()
     startDateReq = request.GET.get('startDate', '')
     endDateReq= request.GET.get('endDate', '')
 
@@ -126,20 +126,20 @@ def handleChart(request=None, col=None):
 
     resultList = list(dbm.col.find(qr).sort('createdTime', -1))
 
-    coinCodeList = [result['coinCode'] for result in resultList]
+    koreaNameList = [result['koreaName'] for result in resultList]
     
-    coinCodeSet = set(coinCodeList)
-    coinCodeSetList = list(coinCodeSet)
+    koreaNameSet = set(koreaNameList)
+    koreaNameSetList = list(koreaNameSet)
 
-    for coinCode in coinCodeSetList:
-        count = coinCodeList.count(coinCode)
-        coinCodeDict[coinCode] = count
+    for koreaName in koreaNameSetList:
+        count = koreaNameList.count(koreaName)
+        koreaNameDict[koreaName] = count
 
-    sortedcoinCodeTup = sorted(coinCodeDict.items(), key=operator.itemgetter(1), reverse=isReverse)[:itemCount]
-    sortedcoinCodeDict = dict((x, y) for x, y in sortedcoinCodeTup)
+    sortedKoreaNameTup = sorted(koreaNameDict.items(), key=operator.itemgetter(1), reverse=isReverse)[:itemCount]
+    sortedKoreaNameDict = dict((x, y) for x, y in sortedKoreaNameTup)
 
-    labels = list(sortedcoinCodeDict.keys())
-    dat = list(sortedcoinCodeDict.values())
+    labels = list(sortedKoreaNameDict.keys())
+    dat = list(sortedKoreaNameDict.values())
 
     return {
             'labels' : labels,
